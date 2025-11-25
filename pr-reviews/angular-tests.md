@@ -1,4 +1,4 @@
-## Prompt for Unit test Pull Requests or code checks
+# Prompt for Pull Requests or code reviews for Unit test 
 
 You just need to modify the `<scope>` and the `<files>` section for the actual branches and files you want to review
 
@@ -17,13 +17,11 @@ Your job is to review ONLY Angular unit tests and provide world-class PR feedbac
 </context>
 
 <scope> 
-  <branch-base>psi-vii-angular-unit-testing</branch-base> 
-  <branch-compare>task-COC-111317</branch-compare>
+   <branch-base>{{branch_base}}</branch-base>
+   <branch-compare>{{branch_compare}}</branch-compare>
 
-  <files> 
-    <file>src/app/shared/components/cmp-card-table/cmp-card-table.component.html</file> 
-    <file>src/app/shared/components/cmp-card-table/cmp-card-table.component.spec.ts</file>
-    <file>src/app/shared/components/cmp-signature/cmp-signature.component.spec.ts</file> 
+  <files>
+    {{file_list}}
   </files>
 </scope> 
 
@@ -36,35 +34,40 @@ Assess correctness, clarity, reliability, and maintainability.
 For each file, produce the following sections in order:
 
 1. **Changes Applied**  
-   - Summarize the differences between main branch vs PR  
-   - Explain why each change was likely made  
-   - Focus ONLY on test code (*.spec.ts)
+- Summarize the differences between main branch vs PR  
+- Explain why each change was likely made  
+- Focus ONLY on test code (*.spec.ts)
 
 2. **Good Practices Found**  
-   - Highlight clean, modern Angular testing techniques  
-   - Mention examples (Host Component pattern, TestBed config, spying, mocks, AAA structure, describe organization)  
-   - Show small code snippets when useful
+- Highlight clean, modern Angular testing techniques  
+- Mention examples (Host Component pattern, TestBed config, spying, mocks, AAA structure, describe organization)  
+- Show small code snippets when useful
 
 3. **Suggested Improvements**  
-   Use this structure for EACH suggestion:
+Use the following structure for **each** suggestion.  
+The `<item>` block MUST be wrapped in a code block to prevent GitHub from breaking formatting:
 
-   <item>
-     <line>[line number or range]</line>
-     <severity>[low | medium | high]</severity>
-     <issue>[short explanation of the problem]</issue>
-     <example>[corrected or improved code snippet]</example>
-   </item>
+```md
+```xml
+  <item>
+    <line>[line number or range]</line>
+    <severity>[low | medium | high]</severity>
+    <issue>[short explanation of the problem]</issue>
+    <example>
+      [corrected/improved code snippet]
+    </example>
+  </item>
 
-   Rules:
-   - At least 5 suggestions
-   - Include fragile selectors, misuse of private state, poor mocking, lack of edge cases, missing detectChanges, unstable DOM queries, etc.
-   - Prefer Angular-specific advice (By.directive, HostComponent, async, fakeAsync, tick, TestBed patterns)
-   - Do NOT be generic: always be specific, point to exact lines, and rewrite the improved version.
+Rules:
+- At least 5 suggestions
+- Include fragile selectors, misuse of private state, poor mocking, lack of edge cases, missing detectChanges, unstable DOM queries, etc.
+- Prefer Angular-specific advice (By.directive, HostComponent, async, fakeAsync, tick, TestBed patterns)
+- Do NOT be generic: always be specific, point to exact lines, and rewrite the improved version.
 
 4. **Summary**  
-   - One short paragraph with final assessment  
-   - Identify top 3 priorities to fix before merge  
-   - Focus on test correctness and stability
+- One short paragraph with final assessment  
+- Identify top 3 priorities to fix before merge  
+- Focus on test correctness and stability
 
 </output_format>
 
@@ -79,6 +82,12 @@ For each file, produce the following sections in order:
 </rules>
 
 </unit_test_review_prompt>
+```
+
+### Example for `<branch-base>` and `<branch-compare>`
+```
+<branch-base>psi-vii-angular-unit-testing</branch-base>
+<branch-compare>EXAMPLE-branch_compare-task-COC-111317</branch-compare>
 ```
 
 # Aspects covered by the Prompt
@@ -97,8 +106,7 @@ For each file, produce the following sections in order:
    Helps the reviewer identify missing or brittle tests.
 
 
-
-## How to exclude files
+# How to exclude files
 
 ### ⛔ Add this at the VERY TOP (before `<review>`)
 ```
@@ -128,7 +136,7 @@ Add this rule at the bottom of your current rules:
 - Only mention test files and test logic found in *.spec.ts.
 ```
 
-### Tip: Add this negative and valid examples section (Copilot and Cursor respond extremely well to examples):
+# Tip: Add this negative and valid examples section (Copilot and Cursor respond extremely well to examples):
 ```
 <invalid_examples>
 The following responses are FORBIDDEN:
